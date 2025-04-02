@@ -1,0 +1,38 @@
+/* Global Color Variables */
+:root {
+  --primary-color: #D0A047; /* Gold */
+  --secondary-color: #001C55; /* Dark Blue */
+  --text-color: #ffffff; /* White */
+}
+
+/* Golden Button - Premium Aesthetic */
+.btn-golden {
+  background-color: var(--primary-color) !important;
+  border: 2px solid var(--primary-color) !important;
+  color: var(--text-color) !important;
+  font-weight: 600;
+  padding: 12px 24px;
+  transition: all 0.3s ease-in-out;
+  border-radius: 0 !important; /* Enforcing sharp, professional edges */
+  box-shadow: none !important;
+}
+
+.btn-golden:hover {
+  background-color: #B6893A !important; /* Slightly darker gold for effect */
+  border-color:#B6893A !important;
+  color: var(--text-color) !important;
+  transform: scale(1.05);
+}
+
+/* Remove Border-Radius from All Buttons */
+button, .btn {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+  .btn-golden {
+    padding: 10px 20px;
+  }
+}
