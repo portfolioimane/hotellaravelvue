@@ -45,9 +45,13 @@ import EditCustomer from '../components/Admin/Customers/EditCustomer.vue';
 
 import ContactMessages from '../components/Admin/Customers/ContactMessages.vue';
 
-import Services from '../components/Admin/Services/Services.vue';
-import AddService from '../components/Admin/Services/AddService.vue';
-import EditService from '../components/Admin/Services/EditService.vue';
+import Amenities from '../components/Admin/Amenities/Amenities.vue';
+import AddAmenity from '../components/Admin/Amenities/AddAmenity.vue';
+import EditAmenity from '../components/Admin/Amenities/EditAmenity.vue';
+
+import Rooms from '../components/Admin/Rooms/Rooms.vue';
+import AddRoom from '../components/Admin/Rooms/AddRoom.vue';
+import EditRoom from '../components/Admin/Rooms/EditRoom.vue';
 
 import ManageLessons from '../components/Admin/Lessons/ManageLessons.vue';
 
@@ -165,9 +169,14 @@ const routes = [
         component: AdminDashboard,
       },
             {
-        name: 'Services',
-        path: 'services',
-        component: Services,
+        name: 'Rooms',
+        path: 'rooms',
+        component: Rooms,
+      },
+                {
+        name: 'Amenities',
+        path: 'amenities',
+        component: Amenities,
       },
       {
         name: 'BuisnessHours',
@@ -201,15 +210,27 @@ const routes = [
 
 
       {
-        name: 'AddServices',
-        path: 'services/add',
-        component: AddService,
+        name: 'AddRoom',
+        path: 'rooms/add',
+        component: AddRoom,
       },
 
           {
-        path: 'services/edit/:id',
-        name: 'EditService',
-        component: EditService,
+        path: 'rooms/edit/:id',
+        name: 'EditRoom',
+        component: EditRoom,
+      },
+
+            {
+        name: 'AddAmenity',
+        path: 'amenities/add',
+        component: AddAmenity,
+      },
+
+          {
+        path: 'amenities/edit/:id',
+        name: 'EditAmenity',
+        component: EditAmenity,
       },
      
      

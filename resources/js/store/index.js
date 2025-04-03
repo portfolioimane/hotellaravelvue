@@ -8,7 +8,9 @@ import backendGeneralCustomize from './modules/backend/generalCustomize.js';
 import generalCustomize from './modules/generalcustomize.js';
 import contact from './modules/contact.js';
 import backendContact from './modules/backend/contact.js';
-import backendServices from './modules/backend/services.js';
+import backendRooms from './modules/backend/rooms.js';
+import backendAmenities from './modules/backend/amenities.js';
+
 import backendLessons from './modules/backend/lessons.js';
 import backendBookings from './modules/backend/bookings.js';
 import booking from './modules/booking.js';
@@ -27,7 +29,8 @@ import smsSetting from './modules/backend/smsSetting.js';
 
 const store = createStore({
   modules: {
-    backendServices,  // Corrected module name
+    backendRooms,  // Corrected module name
+    backendAmenities,
     rooms,
     auth,
     paymentSetting,

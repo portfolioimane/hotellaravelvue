@@ -34,7 +34,10 @@ use App\Http\Controllers\Api\Backend\CustomersController as BackendCustomersCont
 
 
 use App\Http\Controllers\Api\Backend\ContactController as BackendContactController;
-use App\Http\Controllers\Api\Backend\ServicesController as BackendServicesController;
+
+use App\Http\Controllers\Api\Backend\RoomsController as BackendRoomsController;
+use App\Http\Controllers\Api\Backend\AmenitiesController as BackendAmenitiesController;
+
 
 use App\Http\Controllers\Api\Backend\LessonsController as BackendLessonsController;
 use App\Http\Controllers\Api\Backend\ReviewController as BackendReviewController; 
@@ -165,11 +168,12 @@ Route::put('/bookings/{bookingId}/status', [BackendBookingsController::class, 'u
 
 
 
-    Route::apiResource('services', BackendServicesController::class);
+    Route::apiResource('rooms', BackendRoomsController::class);
 
+    Route::apiResource('amenities', BackendAmenitiesController::class);
 
         
-    Route::put('/services/{serviceId}/toggle-featured', [BackendServicesController::class, 'toggleFeatured']);
+    Route::put('/services/{serviceId}/toggle-featured', [BackendRoomsController::class, 'toggleFeatured']);
 
     Route::get('/contact-messages', [BackendContactController::class, 'index']);
    

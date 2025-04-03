@@ -203,7 +203,7 @@ export default {
         name: '',
         email: '',
         phone: '',
-        payment_method: 'cash_on_delivery',
+        payment_method: 'pay_on_site',
         todayDate: '', // Store today's date
       },
       errorMessage: null,

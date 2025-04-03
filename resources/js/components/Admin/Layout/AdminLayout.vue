@@ -13,39 +13,58 @@
           </router-link>
         </li>
 
-        <!-- Manage Services Section -->
         <li>
-          <div @click="toggleServicesDropdown" class="dropdown-header">
+  <div @click="toggleAmenitiesDropdown" class="dropdown-header">
+    <i class="material-icons sidebar-icon">home_repair_service</i>
+    Manage Amenities
+    <i class="material-icons dropdown-arrow">{{ isAmenitiesDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</i>
+  </div>
+  <ul v-if="isAmenitiesDropdownOpen" class="dropdown-list">
+    
+    <li>
+      <router-link 
+        to="/admin/amenities" 
+        class="sidebar-link" 
+        :class="{ active: isActive('/admin/amenities') }">View Amenities</router-link>
+    </li>
+    <li>
+      <router-link 
+        to="/admin/amenities/add" 
+        class="sidebar-link" 
+        :class="{ active: isActive('/admin/amenities/add') }">Add Amenity</router-link>
+    </li>
+
+  </ul>
+</li>
+
+
+        <!-- Manage Rooms Section -->
+        <li>
+          <div @click="toggleRoomsDropdown" class="dropdown-header">
             <i class="material-icons sidebar-icon">shopping_bag</i>
-            Manage Services
-            <i class="material-icons dropdown-arrow">{{ isServicesDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</i>
+            Manage Rooms
+            <i class="material-icons dropdown-arrow">{{ isRoomsDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</i>
           </div>
-          <ul v-if="isServicesDropdownOpen" class="dropdown-list">
+          <ul v-if="isRoomsDropdownOpen" class="dropdown-list">
+
+       
             <li>
               <router-link 
-                to="/admin/services" 
+                to="/admin/rooms" 
                 class="sidebar-link" 
-                :class="{ active: isActive('/admin/services') }">View Services</router-link>
+                :class="{ active: isActive('/admin/rooms') }">View Rooms</router-link>
             </li>
             <li>
               <router-link 
-                to="/admin/services/add" 
+                to="/admin/rooms/add" 
                 class="sidebar-link" 
-                :class="{ active: isActive('/admin/services/add') }">Add Service</router-link>
+                :class="{ active: isActive('/admin/rooms/add') }">Add Room</router-link>
             </li>
     
 
           </ul>
         </li>
-        <li>
-  <router-link 
-    to="/admin/buisnesshours" 
-    class="sidebar-link" 
-    :class="{ active: isActive('/admin/buisnesshours') }">
-    <i class="material-icons sidebar-icon">access_time</i>
-    Business Hours
-  </router-link>
-</li>
+
 
 
         <li>
@@ -212,7 +231,9 @@ export default {
   name: 'AdminLayout',
 data() {
   return {
-    isServicesDropdownOpen: false,
+    isRoomsDropdownOpen: false,
+    isAmenitiesDropdownOpen: false,
+
     isCustomizeDropdownOpen: false, 
     isSettingsDropdownOpen: false,
     isReviewsDropdownOpen: false, // For the reviews dropdown
@@ -220,8 +241,11 @@ data() {
   };
 },
 methods: {
-  toggleServicesDropdown() {
-    this.isServicesDropdownOpen = !this.isServicesDropdownOpen;
+  toggleRoomsDropdown() {
+    this.isRoomsDropdownOpen = !this.isRoomsDropdownOpen;
+  },
+    toggleAmenitiesDropdown() {
+    this.isAmenitiesDropdownOpen = !this.isAmenitiesDropdownOpen;
   },
   toggleCustomizeDropdown() {
     this.isCustomizeDropdownOpen = !this.isCustomizeDropdownOpen;
