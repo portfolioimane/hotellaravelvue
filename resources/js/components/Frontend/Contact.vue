@@ -59,6 +59,12 @@
       </div>
     </div>
 
+    <!-- Google Map Section -->
+    
+      <h3>Our Location</h3>
+   <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d425513.7307048038!2d-8.177915501474684!3d33.5708834841945!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xda7cd4778aa113b%3A0xb06c1d84f310fd3!2sCasablanca!5e0!3m2!1sfr!2sma!4v1743719200305!5m2!1sfr!2sma" width="1200" height="500" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+
     <!-- Error Message -->
     <div v-if="errorMessage" class="error-message">
       <h2>Error!</h2>
@@ -114,7 +120,7 @@ export default {
       });
     },
   },
-   mounted() {
+  mounted() {
     this.$store.dispatch("generalCustomize/fetchGeneralCustomizes");
   },
 };
@@ -260,6 +266,17 @@ button:hover {
   padding: 1rem;
   border-radius: 5px;
   color: #721c24;
+}
+
+.map-column {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.map-column iframe {
+  border: none;
+  max-width: 100%;
+  height: auto;
 }
 
 @media (max-width: 768px) {

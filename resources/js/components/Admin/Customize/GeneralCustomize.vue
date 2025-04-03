@@ -251,7 +251,7 @@ input[type="file"]:focus {
 }
 
 .update-btn:hover {
-  background-color: #187bcd; /* Darker gold on hover */
+  background-color: #B6893A; /* Darker gold on hover */
   transform: scale(1.05);
 }
 

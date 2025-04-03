@@ -13,20 +13,20 @@
         <div class="info-item"><strong>Phone:</strong> {{ booking.phone }}</div>
       </div>
       <div class="info-row">
-        <div class="info-item"><strong>Service:</strong> {{ booking.service.name }}</div>
-        <div class="info-item"><strong>Date:</strong> {{ booking.date }}</div>
+        <div class="info-item"><strong>Room ID:</strong> {{ booking.room_id }}</div>
+        <div class="info-item"><strong>Check-in:</strong> {{ booking.check_in }}</div>
       </div>
       <div class="info-row">
-        <div class="info-item"><strong>Start Time:</strong> {{ booking.start_time }}</div>
-        <div class="info-item"><strong>End Time:</strong> {{ booking.end_time }}</div>
+        <div class="info-item"><strong>Check-out:</strong> {{ booking.check_out }}</div>
+        <div class="info-item"><strong>Guests:</strong> {{ booking.adults }} Adults, {{ booking.children }} Children</div>
       </div>
       <div class="info-row">
         <div class="info-item"><strong>Payment Method:</strong> {{ booking.payment_method }}</div>
-        <div class="info-item"><strong>Total:</strong> ${{ booking.total }}</div>
+        <div class="info-item"><strong>Total:</strong> {{ booking.total }} MAD</div>
       </div>
       <div class="info-row">
         <div class="info-item"><strong>Status:</strong> {{ booking.status }}</div>
-        <div class="info-item"><strong>Paid Amount:</strong> ${{ booking.paid_amount }}</div>
+        <div class="info-item"><strong>Paid Amount:</strong> {{ booking.paid_amount }} MAD</div>
       </div>
     </div>
 

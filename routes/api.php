@@ -173,7 +173,7 @@ Route::put('/bookings/{bookingId}/status', [BackendBookingsController::class, 'u
     Route::apiResource('amenities', BackendAmenitiesController::class);
 
         
-    Route::put('/services/{serviceId}/toggle-featured', [BackendRoomsController::class, 'toggleFeatured']);
+    Route::put('/rooms/{roomId}/toggle-featured', [BackendRoomsController::class, 'toggleFeatured']);
 
     Route::get('/contact-messages', [BackendContactController::class, 'index']);
    

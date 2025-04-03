@@ -5,7 +5,7 @@
     <!-- Dashboard Stats Section -->
     <div class="stats">
       <div class="stat-card">
-        <h3>Total Services</h3>
+        <h3>Total Rooms</h3>
         <p>{{ servicesCount }}</p>
       </div>
       <div class="stat-card">
@@ -13,8 +13,8 @@
         <p>{{ totalBookings }}</p>
       </div>
       <div class="stat-card">
-        <h3>Total Patients</h3>
-        <p>{{ totalPatients }}</p>
+        <h3>Total Customers</h3>
+        <p>{{ totalCustomers }}</p>
       </div>
     </div>
 
@@ -24,10 +24,10 @@
       <table>
         <thead>
           <tr>
-            <th>Patient Name</th>
+            <th>Customer Name</th>
             <th>Date</th>
             <th>Total Amount</th>
-            <th>Service</th>
+            <th>Room</th>
           </tr>
         </thead>
         <tbody>
@@ -35,7 +35,7 @@
             <td>{{ booking.name }}</td>
             <td>{{ formatDate(booking.created_at) }}</td>
             <td>{{ booking.total }} MAD</td>
-            <td>{{ booking.service.name }}</td>
+            <td>{{ booking.room.room_name }}</td>
           </tr>
         </tbody>
       </table>
@@ -50,7 +50,7 @@ export default {
   name: "Dashboard",
   computed: {
     ...mapGetters({
-      services: "backendServices/allServices", // Changed from backendCourses to backendServices
+      services: "backendRooms/allRooms", // Changed from backendCourses to backendRooms
       bookings: "backendBookings/bookings",
       customers: "backendCustomers/allCustomers",
     }),
@@ -63,7 +63,7 @@ export default {
       return this.bookings.length;
     },
 
-    totalPatients() {
+    totalCustomers() {
       return this.customers.length;
     },
 
@@ -76,7 +76,7 @@ export default {
   methods: {
     async fetchDashboardData() {
       try {
-        await this.$store.dispatch("backendServices/fetchServices"); // Fetch services instead of courses
+        await this.$store.dispatch("backendRooms/fetchRooms"); // Fetch services instead of courses
         await this.$store.dispatch("backendBookings/fetchBookings");
         await this.$store.dispatch("backendCustomers/fetchCustomers");
       } catch (error) {

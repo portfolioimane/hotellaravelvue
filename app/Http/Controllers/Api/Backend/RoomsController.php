@@ -74,60 +74,80 @@ class RoomsController extends Controller
         Log::info('New room created', ['room' => $room]);
         return response()->json($room, 201);
     }
+public function update(Request $request, $id)
+{
+    // Validate and update a room
+    $validator = Validator::make($request->all(), [
+        'room_name' => 'sometimes|required|string|max:255',
+        'room_type' => 'sometimes|required|string|max:255',
+        'max_adults' => 'sometimes|required|integer',
+        'max_children' => 'sometimes|required|integer',
+        'price' => 'sometimes|required|numeric',
+        'description' => 'nullable|string',
+        'amenities' => 'nullable|array',
+        'amenities.*' => 'exists:amenities,id',
+    ]);
 
-    public function update(Request $request, $id)
-    {
-        // Validate and update a room
-        $validator = Validator::make($request->all(), [
-            'room_name' => 'sometimes|required|string|max:255',
-            'room_type' => 'sometimes|required|string|max:255',
-            'max_adults' => 'sometimes|required|integer',
-            'max_children' => 'sometimes|required|integer',
-            'price' => 'sometimes|required|numeric',
-            'description' => 'nullable|string',
-            'amenities' => 'nullable|array',
-            'amenities.*' => 'exists:amenities,id',
-        ]);
-
-        if ($validator->fails()) {
-            Log::error('Validation failed on update', ['errors' => $validator->errors()]);
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $room = Room::findOrFail($id);
-        $data = $request->all();
-
-        // Store new main photo if uploaded, and delete the old one
-        if ($request->hasFile('main_photo')) {
-            if ($room->main_photo) {
-                Storage::delete('public/' . $room->main_photo);
-            }
-            $path = $request->file('main_photo')->store('images/rooms', 'public');
-            $data['main_photo'] = '/storage/' . $path;
-        }
-
-        // Update the room
-        $room->update($data);
-
-        // Associate amenities with the room
-        if ($request->has('amenities')) {
-            $room->amenities()->sync($request->amenities);
-        }
-
-        // Handle room photos
-        if ($request->hasFile('photoGallery')) {
-            foreach ($request->file('photoGallery') as $photo) {
-                $path = $photo->store('images/rooms', 'public');
-                PhotoGallery::create([
-                    'room_id' => $room->id,
-                    'photo_url' => '/storage/' . $path,
-                ]);
-            }
-        }
-
-        Log::info('Room updated', ['room' => $room]);
-        return response()->json($room);
+    if ($validator->fails()) {
+        Log::error('Validation failed on update', ['errors' => $validator->errors()]);
+        return response()->json(['errors' => $validator->errors()], 422);
     }
+
+    $room = Room::findOrFail($id);
+    $data = $request->all();
+
+    // Store new main photo if uploaded, and delete the old one
+    if ($request->hasFile('main_photo')) {
+        if ($room->main_photo) {
+            Storage::delete('public/' . $room->main_photo);
+        }
+        $path = $request->file('main_photo')->store('images/rooms', 'public');
+        $data['main_photo'] = '/storage/' . $path;
+    }
+
+    // Update the room
+    $room->update($data);
+
+    // Associate amenities with the room
+    if ($request->has('amenities')) {
+        $room->amenities()->sync($request->amenities);
+    }
+
+    // Handle room photos
+    if ($request->hasFile('photo_gallery')) {
+        foreach ($request->file('photo_gallery') as $photo) {
+            $path = $photo->store('images/rooms', 'public');
+            PhotoGallery::create([
+                'room_id' => $room->id,
+                'photo_url' => '/storage/' . $path,
+            ]);
+        }
+    }
+
+    // Handle deleted photos (if any)
+    if ($request->has('removed_photos')) {
+        // Decode the removed photos from JSON string to array
+        $removedPhotos = json_decode($request->input('removed_photos'), true); // true to return as array
+        
+        if (is_array($removedPhotos)) {
+            // Loop through each photo to be removed
+            foreach ($removedPhotos as $removedPhoto) {
+                $photo = PhotoGallery::where('room_id', $room->id)->where('photo_url', $removedPhoto)->first();
+                if ($photo) {
+                    // Delete photo from storage
+                    Storage::delete('public/' . $photo->photo_url);
+                    // Delete the record from the database
+                    $photo->delete();
+                }
+            }
+        }
+    }
+
+    Log::info('Room updated', ['room' => $room]);
+    return response()->json($room);
+}
+
+
 
     public function show($id)
     {

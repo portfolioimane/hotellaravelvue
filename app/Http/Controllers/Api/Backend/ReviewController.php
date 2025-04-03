@@ -18,7 +18,7 @@ class ReviewController extends Controller
             Log::info('Fetching reviews from the database.');
 
             // Fetch reviews along with their associated user and product data
-            $reviews = Review::with('user', 'service')->get();
+            $reviews = Review::with('user', 'room')->get();
 
             // Log the number of reviews fetched
             Log::info('Number of reviews fetched: ' . $reviews->count());
@@ -40,7 +40,7 @@ public function store(Request $request)
         // Validate the incoming data
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
-            'service_id' => 'required|exists:services,id',
+            'room_id' => 'required|exists:rooms,id',
             'rating' => 'required|integer|min:1|max:5',
             'review' => 'nullable|string',
             'status' => 'in:pending,approved,rejected',

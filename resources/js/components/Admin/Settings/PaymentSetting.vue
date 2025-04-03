@@ -303,7 +303,7 @@ export default {
 }
 
 .btn-update:hover {
-  background-color: #187bcd;
+  background-color: #B6893A;
 }
 
 .reminder-note {
@@ -347,7 +347,7 @@ select.form-control option {
 }
 
 .btn-update:hover {
-  background-color: #187bcd;
+  background-color: #b6893a;
 }
 
 /* Modal Styling */

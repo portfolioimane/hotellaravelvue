@@ -229,7 +229,7 @@ export default {
 }
 
 .btn-update:hover {
-  background-color: #187bcd;
+  background-color: #B6893A;
 }
 
 .reminder-note {

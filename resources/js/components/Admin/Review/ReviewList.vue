@@ -12,7 +12,7 @@
     <table v-if="reviews.length" class="review-table">
       <thead>
         <tr>
-          <th>Course</th>
+          <th>Room</th>
           <th>User</th>
           <th>Rating</th>
           <th>Review</th>
@@ -23,7 +23,7 @@
       </thead>
       <tbody>
         <tr v-for="review in reviews" :key="review.id">
-          <td>{{ review.course?.title }}</td>
+          <td>{{ review.room?.room_name }}</td>
           <td>{{ review.user?.name }}</td>
           <td>
             <span class="rating-stars">

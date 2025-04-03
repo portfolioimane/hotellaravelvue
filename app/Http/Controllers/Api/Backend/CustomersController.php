@@ -31,11 +31,6 @@ $validator = Validator::make($request->all(), [
     'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
     'date_of_birth' => 'nullable|date',
     'gender' => 'nullable|in:male,female,other',
-    'emergency_contact' => 'nullable|string|max:255',
-    'medical_history' => 'nullable|string',
-    'insurance_provider' => 'nullable|string|max:255',
-    'insurance_id' => 'nullable|string|max:255',
-    'is_insured' => 'nullable|boolean',  // Add this line for is_insured
 ]);
 
 
@@ -74,11 +69,6 @@ public function update(Request $request, $id)
         'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         'date_of_birth' => 'nullable|date',
         'gender' => 'nullable|in:male,female,other',
-        'emergency_contact' => 'nullable|string|max:255',
-        'medical_history' => 'nullable|string',
-        'is_insured' => 'nullable|boolean',
-        'insurance_provider' => 'nullable|string|max:255',
-        'insurance_id' => 'nullable|string|max:255',
     ]);
 
     if ($validator->fails()) {
@@ -89,11 +79,6 @@ public function update(Request $request, $id)
     $customer = User::findOrFail($id);
     $data = $request->all();
 
-    // If 'is_insured' is 0 (No), make insurance fields nullable (null)
-    if (isset($data['is_insured']) && $data['is_insured'] == 0) {
-        $data['insurance_provider'] = null;
-        $data['insurance_id'] = null;
-    }
 
     // Store new avatar if uploaded, and delete the old one
     if ($request->hasFile('avatar')) {

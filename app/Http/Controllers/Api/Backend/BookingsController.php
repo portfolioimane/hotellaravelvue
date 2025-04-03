@@ -19,7 +19,7 @@ class BookingsController extends Controller
         Log::info('Fetching all bookings'); // Log entry
 
         try {
-            $bookings = Booking::with(['user', 'service'])->get(); // Load related user and service
+            $bookings = Booking::with(['user', 'room'])->get(); // Load related user and service
             Log::info('Bookings fetched successfully', ['bookings_count' => $bookings->count()]);
         } catch (\Exception $e) {
             Log::error('Error fetching bookings: ' . $e->getMessage());
@@ -40,7 +40,7 @@ class BookingsController extends Controller
         Log::info('Fetching booking details', ['booking_id' => $bookingId]);
 
         try {
-            $booking = Booking::with(['user', 'service'])->find($bookingId);
+            $booking = Booking::with(['user', 'room'])->find($bookingId);
 
             if (!$booking) {
                 Log::warning('Booking not found', ['booking_id' => $bookingId]);
@@ -68,7 +68,7 @@ class BookingsController extends Controller
 
         $request->validate([
             'user_id' => 'required|exists:users,id',
-            'service_id' => 'required|exists:services,id',
+            'room_id' => 'required|exists:services,id',
             'status' => 'required|in:pending,confirmed,cancelled',
             'booking_date' => 'required|date',
         ]);

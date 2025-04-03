@@ -166,7 +166,7 @@
 
 <!-- Explanation of Booking Fee -->
 <p class="text-center text-muted">
-  <strong>Online Payment ({{ formattedBookingFee }}):</strong> Your booking is reserved, and you'll receive a reminder one day before. The fee is deducted from the total cost.  <br><br>
+  <strong>Online Payment ({{ formattedBookingFee }}) DH:</strong> Your booking is reserved, and you'll receive a reminder one day before. The fee is deducted from the total cost.  <br><br>
   <strong>Pay On-Site:</strong> Your booking is pending. Call at least one day before to confirm.
 </p>
 
@@ -225,7 +225,7 @@ export default {
     return this.selectedRoom ? this.selectedRoom.price * 0.1 : 0; 
   },
     formattedBookingFee() {
-    return `${this.bookingFee.toFixed(2)} DH`; // Format to 2 decimal places
+    return `${this.bookingFee.toFixed(2)}`; // Format to 2 decimal places
   },
         isFormValid() {
       return this.form.name && this.form.email && this.form.payment_method;
@@ -279,6 +279,7 @@ getBookingData() {
 
 
 async submitBooking() {
+
     if (!this.isFormValid) {
         this.errorMessage = "Please complete all fields and ensure your cart is not empty.";
         return;
@@ -295,6 +296,7 @@ const conversionRate = 0.1; // Conversion rate from MAD to USD
 
 // Convert the booking fee to USD
 const bookingFeeInUSD = bookingFeeInMAD * conversionRate;
+
 
 // Dispatch the Stripe payment creation action with the booking fee
 const { clientSecret } = await this.$store.dispatch('booking/createStripePayment', bookingFeeInUSD);

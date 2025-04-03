@@ -18,7 +18,8 @@
               <span v-for="(amenity, index) in room.amenities" :key="index">{{ amenity.name }}{{ index < room.amenities.length - 1 ? ', ' : '' }}</span>
             </span>
             <span class="room-price">
-              <i class="fa fa-tag"></i> {{ room.price ? `${room.price} MAD` : 'Price not available' }}
+              <i class="fa fa-tag"></i> 
+              {{ room.price ? `${room.price} MAD per night` : 'Price not available' }}
             </span>
           </div>
         </div>
@@ -28,8 +29,20 @@
       <div class="photo-gallery">
         <h3>Photo Gallery</h3>
         <div class="gallery-images">
-          <div v-for="(photo, index) in room.photoGallery" :key="index" class="gallery-item">
+          <div v-for="(photo, index) in room.photo_gallery" :key="index" class="gallery-item" @click="openGallery(index)">
             <img :src="photo.photo_url" :alt="`Photo ${index + 1}`" class="gallery-img" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for Viewing Full Image (Carousel Style with Left and Right Arrows) -->
+      <div v-if="showModal" class="gallery-modal" @click.self="closeGallery">
+        <div class="modal-content">
+          <span class="close" @click="closeGallery">&times;</span>
+          <div class="modal-body">
+            <button @click="prevPhoto" class="nav-btn left">&lt;</button>
+            <img :src="currentPhoto.photo_url" :alt="`Full photo ${currentPhotoIndex + 1}`" class="modal-img" />
+            <button @click="nextPhoto" class="nav-btn right">&gt;</button>
           </div>
         </div>
       </div>
@@ -47,33 +60,32 @@
       <i class="fa fa-spinner fa-spin"></i> Loading room details...
     </div>
 
-            <Review v-if="roomLoaded" :roomId="Number(roomId)" />
-
+    <Review v-if="roomLoaded" :roomId="Number(roomId)" />
   </div>
 </template>
 
 <script>
-
 import Review from './Review.vue';
-
 import { mapGetters, mapActions } from 'vuex';
 
 export default {
-      components: {
-    Review
-  },
+  components: { Review },
   data() {
     return {
-      roomLoaded: false, // Track if the room has finished loading
+      roomLoaded: false,
+      showModal: false,
+      currentPhotoIndex: 0,
     };
   },
   computed: {
     ...mapGetters({
       room: 'rooms/selectedRoom', // The room fetched from the Vuex store
     }),
-    
     roomId() {
-      return this.$route.params.roomId;  // Capture the room ID from the URL
+      return this.$route.params.roomId; // Capture the room ID from the URL
+    },
+    currentPhoto() {
+      return this.room.photo_gallery[this.currentPhotoIndex];
     },
   },
   created() {
@@ -84,10 +96,30 @@ export default {
       fetchRoomById: 'rooms/fetchRoomById',  // Action to fetch the room by ID
     }),
 
-    // Redirect to booking page
     bookNow() {
       if (this.room && this.room.id) {
         this.$router.push({ name: 'checkout', params: { roomId: this.room.id } });
+      }
+    },
+
+    openGallery(index) {
+      this.showModal = true;
+      this.currentPhotoIndex = index;
+    },
+
+    closeGallery() {
+      this.showModal = false;
+    },
+
+    prevPhoto() {
+      if (this.currentPhotoIndex > 0) {
+        this.currentPhotoIndex--;
+      }
+    },
+
+    nextPhoto() {
+      if (this.currentPhotoIndex < this.room.photo_gallery.length - 1) {
+        this.currentPhotoIndex++;
       }
     },
   },
@@ -186,6 +218,12 @@ export default {
   height: 150px;
   overflow: hidden;
   border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.gallery-item:hover {
+  transform: scale(1.05);
 }
 
 .gallery-img {
@@ -217,9 +255,8 @@ export default {
   margin-right: 8px;
 }
 
-.btn-book:hover
-{
-  background-color: #187bcd;
+.btn-book:hover {
+  background-color: #B6893A;
 }
 
 .loading {
@@ -228,13 +265,68 @@ export default {
   text-align: center;
 }
 
-.fa {
-  font-size: 1.2rem;
+.gallery-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-.fa-spinner {
-  font-size: 3rem;
-  color: #D0A047;
-  margin-right: 10px;
+.modal-content {
+  position: relative;
+  max-width: 80%;
+  max-height: 80%;
+}
+
+.modal-body {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+.nav-btn {
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  padding: 10px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.nav-btn:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+.left {
+  position: absolute;
+  left: 20px;
+}
+
+.right {
+  position: absolute;
+  right: 20px;
+}
+
+.close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
 }
 </style>

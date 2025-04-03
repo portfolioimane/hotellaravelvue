@@ -89,28 +89,27 @@
         <img :src="imagePreview" alt="Room Image Preview" />
       </div>
 
-<div class="form-group">
-  <label for="amenities">Select Amenities:</label>
-  <div v-for="amenity in amenities" :key="amenity.id">
-    <label :for="'amenity_' + amenity.id">
-      <input
-        type="checkbox"
-        :id="'amenity_' + amenity.id"
-        :value="amenity.id"
-        v-model="room.amenities"
-      />
-      {{ amenity.name }}
-    </label>
-  </div>
-</div>
-
+      <div class="form-group">
+        <label for="amenities">Select Amenities:</label>
+        <div v-for="amenity in amenities" :key="amenity.id">
+          <label :for="'amenity_' + amenity.id">
+            <input
+              type="checkbox"
+              :id="'amenity_' + amenity.id"
+              :value="amenity.id"
+              v-model="room.amenities"
+            />
+            {{ amenity.name }}
+          </label>
+        </div>
+      </div>
 
       <!-- Photo Gallery Section -->
       <div class="form-group">
-        <label for="photoGallery">Upload Additional Photos:</label>
+        <label for="photo_gallery">Upload Additional Photos:</label>
         <input
           type="file"
-          id="photoGallery"
+          id="photo_gallery"
           multiple
           @change="handleGalleryUpload"
           accept="image/*"
@@ -122,11 +121,15 @@
 
       <!-- Preview of Gallery Photos -->
       <div class="image-gallery-preview">
-        <div v-for="(image, index) in room.photo_gallery" :key="index" class="image-preview">
+        <div
+          v-for="(image, index) in room.photo_gallery"
+          :key="index"
+          class="image-preview"
+        >
           <img :src="image.preview" alt="Gallery Image" />
+          <button type="button" @click="removePhoto(index)">Remove</button>
         </div>
       </div>
-
 
       <div class="button-group">
         <button type="submit" class="btn primary">Save Changes</button>
@@ -151,11 +154,12 @@ export default {
         description: '',
         featured: false,
         main_photo: null,
-        photoGallery: [],
+        photo_gallery: [],
         amenities: [],
       },
       imageError: false,
       imagePreview: '',
+          removedPhotos: [], // To track removed photos
     };
   },
   computed: {
@@ -165,37 +169,35 @@ export default {
     },
     ...mapGetters('backendRooms', ['currentRoom']),
   },
-async created() {
-  const roomId = this.$route.params.id; // Assuming the room ID is passed as a route param
-  try {
-    await this.$store.dispatch('backendRooms/fetchRoomById', roomId);
-    this.room = { ...this.currentRoom };
+  async created() {
+    const roomId = this.$route.params.id; // Assuming the room ID is passed as a route param
+    try {
+      await this.$store.dispatch('backendRooms/fetchRoomById', roomId);
+      this.room = { ...this.currentRoom };
 
-    // Set image preview for the main photo
-    this.imagePreview = this.room.main_photo;
+      // Set image preview for the main photo
+      this.imagePreview = this.room.main_photo;
 
-    // Populate photo gallery with preview URLs
-    this.room.photo_gallery.forEach((image) => {
-      image.preview = image.photo_url; // Assuming 'photo_url' is the property holding the image URL
-    });
+      // Populate photo gallery with preview URLs
+      this.room.photo_gallery.forEach((image) => {
+        image.preview = image.photo_url; // Assuming 'photo_url' is the property holding the image URL
+      });
 
-    // Make sure amenities are populated correctly if available
-    if (this.room.amenities && Array.isArray(this.room.amenities)) {
-      // Ensure that amenities are correctly matched with the amenity IDs
-      this.room.amenities = [...this.room.amenities];
+      // Make sure amenities are populated correctly if available
+      if (this.room.amenities && Array.isArray(this.room.amenities)) {
+        // Ensure that amenities are correctly matched with the amenity IDs
+        this.room.amenities = [...this.room.amenities];
+      }
+
+      // Ensure the checkboxes are properly checked
+      if (this.room.amenities && this.room.amenities.length > 0) {
+        this.room.amenities = this.room.amenities.map(amenity => amenity.id);
+      }
+
+    } catch (error) {
+      console.error('Error fetching room:', error);
     }
-
-    // Ensure the checkboxes are properly checked
-    if (this.room.amenities && this.room.amenities.length > 0) {
-      this.room.amenities = this.room.amenities.map(amenity => amenity.id);
-    }
-
-  } catch (error) {
-    console.error('Error fetching room:', error);
-  }
-},
-
-
+  },
   methods: {
     handleImageUpload(event) {
       const file = event.target.files[0];
@@ -223,12 +225,18 @@ async created() {
         if (file.size <= 2 * 1024 * 1024) {
           const reader = new FileReader();
           reader.onload = (e) => {
-            this.room.photoGallery.push({ file, preview: e.target.result });
+            this.room.photo_gallery.push({ file, preview: e.target.result });
           };
           reader.readAsDataURL(file);
         }
       });
     },
+
+ removePhoto(index) {
+    const photoUrl = this.room.photo_gallery[index].photo_url; // Assuming the 'photo_url' is stored
+    this.removedPhotos.push(photoUrl); // Add to removed photos list
+    this.room.photo_gallery.splice(index, 1); // Remove from preview
+  },
 
     async submitForm() {
       const roomId = this.$route.params.id; // Assuming the room ID is passed as a route param
@@ -239,17 +247,19 @@ async created() {
       }
 
       const formData = new FormData();
+      
+  formData.append('removed_photos', JSON.stringify(this.removedPhotos));
 
-      // Ensure amenities are appended as an array
+        // Ensure amenities are appended as an array
       this.room.amenities.forEach((amenityId) => {
         formData.append('amenities[]', amenityId);  // Append each amenity as an individual item
       });
 
       // Append other form data
       Object.entries(this.room).forEach(([key, value]) => {
-        if (key === 'photoGallery') {
+        if (key === 'photo_gallery') {
           value.forEach((fileData) => {
-            formData.append('photoGallery[]', fileData.file);
+            formData.append('photo_gallery[]', fileData.file);
           });
         } else if (key !== 'amenities') {
           formData.append(key, value);
@@ -257,8 +267,8 @@ async created() {
       });
 
       try {
-    await this.$store.dispatch('backendRooms/updateRoom', { id: roomId, formData });
-            this.$router.push('/admin/rooms');
+        await this.$store.dispatch('backendRooms/updateRoom', { id: roomId, formData });
+        this.$router.push('/admin/rooms');
       } catch (error) {
         console.error('Error updating room:', error);
       }
@@ -394,4 +404,3 @@ async created() {
 }
 
 </style>
-

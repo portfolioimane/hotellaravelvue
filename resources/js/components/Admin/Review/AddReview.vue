@@ -24,17 +24,17 @@
       
       <!-- Product Selection Dropdown -->
       <select 
-        v-model="reviewData.service_id" 
+        v-model="reviewData.room_id" 
         required 
         class="input-field"
       >
-        <option value="" disabled>Select Service</option>
+        <option value="" disabled>Select Room</option>
         <option 
-          v-for="service in services" 
-          :key="service.id" 
-          :value="service.id"
+          v-for="room in rooms" 
+          :key="room.id" 
+          :value="room.id"
         >
-          {{ service.name }} <!-- Ensure 'title' exists or change to the correct property -->
+          {{ room.room_name }} <!-- Ensure 'title' exists or change to the correct property -->
         </option>
       </select>
 
@@ -71,7 +71,7 @@ export default {
     return {
       reviewData: {
         user_id: '',
-        service_id: '',
+        room_id: '',
         rating: '',
         review: '',
         status: 'pending',
@@ -86,8 +86,8 @@ export default {
     error() {
       return this.$store.getters['backendReview/errorMessage'];
     },
-    services() {
-      return this.$store.getters['backendServices/allServices'];
+    rooms() {
+      return this.$store.getters['backendRooms/allRooms'];
     },
     customers() {
       return this.$store.getters['backendCustomers/allCustomers'];
@@ -95,7 +95,7 @@ export default {
   },
   methods: {
     ...mapActions('backendReview', ['createReview']),
-    ...mapActions('backendServices', ['fetchServices']),
+    ...mapActions('backendRooms', ['fetchRooms']),
     ...mapActions('backendCustomers', ['fetchCustomers']),
     async submitReview() {
       try {
@@ -103,7 +103,7 @@ export default {
         // Reset the review form
         this.reviewData = {
           user_id: '',
-          service_id: '',
+          room_id: '',
           rating: '',
           review: '',
           status: 'pending',
@@ -118,7 +118,7 @@ export default {
   },
 
   mounted() {
-    this.fetchServices();
+    this.fetchRooms();
     this.fetchCustomers();
   },
 };
@@ -206,7 +206,7 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
-.service-name {
+.room-name {
   font-weight: 600;
   font-size: 1.1rem;
   color: #007bff;

@@ -103,16 +103,18 @@ public function create(Request $request)
     }
 
     // Check if the room is available for the selected check-in and check-out dates
-    $existingBooking = Booking::where('room_id', $room->id)
-        ->where(function ($query) use ($checkInDate, $checkOutDate) {
-            $query->whereBetween('check_in', [$checkInDate, $checkOutDate])
-                  ->orWhereBetween('check_out', [$checkInDate, $checkOutDate])
-                  ->orWhere(function ($query) use ($checkInDate, $checkOutDate) {
-                      $query->where('check_in', '<=', $checkInDate)
-                            ->where('check_out', '>=', $checkOutDate);
-                  });
-        })
-        ->exists();
+$existingBooking = Booking::where('room_id', $room->id)
+    ->where('status', 'completed') // Ensure the booking status is 'completed'
+    ->where(function ($query) use ($checkInDate, $checkOutDate) {
+        $query->whereBetween('check_in', [$checkInDate, $checkOutDate])
+              ->orWhereBetween('check_out', [$checkInDate, $checkOutDate])
+              ->orWhere(function ($query) use ($checkInDate, $checkOutDate) {
+                  $query->where('check_in', '<=', $checkInDate)
+                        ->where('check_out', '>=', $checkOutDate);
+              });
+    })
+    ->exists();
+
 
     if ($existingBooking) {
         return response()->json(['message' => 'The selected room is already booked for these dates'], 400);
@@ -291,7 +293,9 @@ public function searchAvailableRooms(Request $request)
                       $q->where('check_in', '<=', $checkIn)
                         ->where('check_out', '>=', $checkOut);
                   });
-            });
+            })
+            // Ensure only completed bookings are excluded
+            ->where('status', 'completed');
         })
         ->get();
 
@@ -307,7 +311,7 @@ public function getUnavailableDates($roomId)
 {
     // Retrieve only completed bookings for the specified room
     $bookings = Booking::where('room_id', $roomId)
-        ->where('status', 'pending') // Only consider completed bookings
+        ->where('status', 'completed') // Only consider completed bookings
         ->get(['check_in', 'check_out']);
 
     // Collect all booked dates

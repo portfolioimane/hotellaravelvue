@@ -80,26 +80,19 @@
 <li>
   <div @click="toggleCustomersDropdown" class="dropdown-header">
     <i class="material-icons sidebar-icon">people</i>
-    Manage Patients
+    Manage Customers
     <i class="material-icons dropdown-arrow">{{ isCustomersDropdownOpen ? 'arrow_drop_up' : 'arrow_drop_down' }}</i>
   </div>
   <ul v-if="isCustomersDropdownOpen" class="dropdown-list">
     <li>
       <router-link 
-        to="/admin/patients" 
+        to="/admin/customers" 
         class="sidebar-link" 
-        :class="{ active: isActive('/admin/patients') }">
-        View Patients
+        :class="{ active: isActive('/admin/customers') }">
+        View customers
       </router-link>
     </li>
-    <li>
-      <router-link 
-        to="/admin/patients/add" 
-        class="sidebar-link" 
-        :class="{ active: isActive('/admin/patients/add') }">
-        Add Patient
-      </router-link>
-    </li>
+
   </ul>
 </li>
 

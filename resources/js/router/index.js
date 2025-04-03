@@ -236,36 +236,21 @@ const routes = [
      
                {
         name: 'Customers',
-        path: 'patients',
+        path: 'customers',
         component: Customers,
       },
             {
         name: 'AddCustomer',
-        path: 'patients/add',
+        path: 'customers/add',
         component: AddCustomer,
       },
 
           {
-        path: 'patients/edit/:id',
+        path: 'customers/edit/:id',
         name: 'EditCustomer',
         component: EditCustomer,
       },
-      {
-  
-  path: 'patients/:patientId/histories',    
-  name: 'ManageHistories',
-  component: ManagePatientHistories, 
-},
-{
-  path: '/patients/:patientId/add-history',
-  name: 'AddPatientHistory',
-  component:AddPatientHistory,
-},
-{
-      path: 'patients/:patientId/histories/edit/:historyId',
-        name: 'EditPatientHistory',
-        component: EditPatientHistory,
-      },
+
 
 
 {

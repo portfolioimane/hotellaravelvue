@@ -34,7 +34,7 @@
         </div>
         <p class="review-text">{{ review.review }}</p>
         <div class="review-footer">
-          <span class="review-product">{{ review.room.name }}</span>
+          <span class="review-product">{{ review.room.room_name }}</span>
         </div>
       </div>
     </div>

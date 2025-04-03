@@ -52,54 +52,7 @@
         </select>
       </div>
 
-      <div class="form-group">
-        <label for="emergency_contact">Emergency Contact:</label>
-        <input
-          type="text"
-          id="emergency_contact"
-          v-model="customer.emergency_contact"
-          placeholder="Emergency contact details"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="medical_history">Medical History:</label>
-        <textarea
-          id="medical_history"
-          v-model="customer.medical_history"
-          placeholder="Medical history details"
-        ></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="is_insured">Is Insured?</label>
-        <select id="is_insured" v-model="customer.is_insured">
-          <option :value="1">Yes</option>
-          <option :value="0">No</option>
-        </select>
-      </div>
-
-      <!-- Insurance fields, visible only if 'is_insured' is 1 (Yes) -->
-      <div class="form-group" v-if="customer.is_insured == 1">
-        <label for="insurance_provider">Insurance Provider:</label>
-        <input
-          type="text"
-          id="insurance_provider"
-          v-model="customer.insurance_provider"
-          placeholder="Insurance provider name"
-        />
-      </div>
-
-      <div class="form-group" v-if="customer.is_insured == 1">
-        <label for="insurance_id">Insurance ID:</label>
-        <input
-          type="text"
-          id="insurance_id"
-          v-model="customer.insurance_id"
-          placeholder="Insurance ID"
-        />
-      </div>
-
+     
       <!-- Avatar Upload -->
       <div class="form-group">
         <label for="avatar">Upload Avatar:</label>
@@ -141,11 +94,6 @@ export default {
         phone: '',
         date_of_birth: '',
         gender: 'male',
-        emergency_contact: '',
-        medical_history: '',
-        is_insured: 0,  // Default to 'No' (0)
-        insurance_provider: null,  // Make insurance fields nullable
-        insurance_id: null,  // Make insurance fields nullable
         avatar: null,
       },
       avatarError: false,  // Flag to track avatar validation error
@@ -188,15 +136,9 @@ export default {
         return;
       }
 
-      // Convert `is_insured` to a boolean (0 or 1)
-      this.customer.is_insured = this.customer.is_insured === 1 ? 1 : 0;
-      console.log("is_insured:", this.customer.is_insured); // Check the value of `is_insured`
 
-      // If the insurance is 'No', set the insurance fields to null before submitting
-      if (this.customer.is_insured === 0) {
-        this.customer.insurance_provider = null;
-        this.customer.insurance_id = null;
-      }
+
+
 
       const formData = new FormData();
       
@@ -206,18 +148,14 @@ export default {
       if (this.customer.phone) formData.append('phone', this.customer.phone);
       if (this.customer.date_of_birth) formData.append('date_of_birth', this.customer.date_of_birth);
       if (this.customer.gender) formData.append('gender', this.customer.gender);
-      if (this.customer.emergency_contact) formData.append('emergency_contact', this.customer.emergency_contact);
-      if (this.customer.medical_history) formData.append('medical_history', this.customer.medical_history);
-      formData.append('is_insured', this.customer.is_insured);
-      if (this.customer.insurance_provider) formData.append('insurance_provider', this.customer.insurance_provider);
-      if (this.customer.insurance_id) formData.append('insurance_id', this.customer.insurance_id);
+
 
       if (this.customer.avatar) {
         formData.append('avatar', this.customer.avatar);
       }
 
       await this.updateCustomer({ id: this.$route.params.id, formData });
-      this.$router.push('/admin/patients');
+      this.$router.push('/admin/customers');
     }
   },
   mounted() {

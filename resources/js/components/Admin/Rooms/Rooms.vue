@@ -1,81 +1,82 @@
 <template>
-  <div class="rooms">
-    <h1>Manage Rooms</h1>
-    
-    <table class="rooms-table">
-      <thead>
-        <tr>
-          <th>Room ID</th>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Max Adults</th>
-          <th>Max Children</th>
-          <th>Price (MAD)</th>
-          <th>Main Photo</th>
-            <th>Amenities</th>
-          <th>Featured</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="room in allRooms" :key="room.id">
-          <td>{{ room.id }}</td>
-          <td>{{ room.room_name }}</td>
-          <td>{{ room.room_type }}</td>
-          <td>{{ room.max_adults }}</td>
-          <td>{{ room.max_children }}</td>
-          <td>{{ parseFloat(room.price).toFixed(2) }}</td>
+  <div class="container">
+    <div class="rooms">
+      <h1>Manage Rooms</h1>
 
-          <!-- Main Photo -->
-          <td>
-            <img 
-              :src="room.main_photo ? `${room.main_photo}` : '/images/rooms/default-room.png'" 
-              alt="Room Image" 
-              class="room-image"
-            />
-          </td>
-  <!-- Amenities -->
-<td>
-  <ul class="amenities-list">
-    <li v-for="amenity in room.amenities" :key="amenity.id">
-      <!-- Display the icon dynamically based on the icon string -->
-      {{ amenity.name }}
-    </li>
-  </ul>
+      <table class="rooms-table">
+        <thead>
+          <tr>
+            <th>Room ID</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>capacity</th>
+            <th>Price (MAD)</th>
+            <th>Photo</th>
+            <th>Amenities</th>
+             <th>Photo Gallery</th>
+            <th>Featured</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="room in allRooms" :key="room.id">
+            <td>{{ room.id }}</td>
+            <td>{{ room.room_name }}</td>
+            <td>{{ room.room_type }}</td>
+            <td>{{ room.max_adults }} adults-{{ room.max_children }}child</td>
+            <td>{{ parseFloat(room.price).toFixed(2) }}</td>
+
+            <!-- Main Photo -->
+            <td>
+              <img
+                :src="room.main_photo ? `${room.main_photo}` : '/images/rooms/default-room.png'"
+                alt="Image"
+                class="room-image"
+              />
+            </td>
+
+            <!-- Amenities -->
+            <td>
+              <ul class="amenities-list">
+                <li v-for="amenity in room.amenities" :key="amenity.id">
+                  {{ amenity.name }}
+                </li>
+              </ul>
+            </td>
+
+                      <!-- Photo Gallery -->
+      <td>
+  <div class="gallery">
+    <img v-for="photo in room.photo_gallery" 
+         :key="photo.id" 
+         :src="photo.photo_url" 
+         class="room-image" />
+  </div>
 </td>
 
 
-      
+            <!-- Featured Checkbox -->
+            <td>
+              <input type="checkbox" :checked="room.featured" @change="toggleFeatured(room)" />
+            </td>
 
-
-
-          <!-- Featured Checkbox -->
-          <td>
-            <input 
-              type="checkbox" 
-              :checked="room.featured" 
-              @change="toggleFeatured(room)" 
-            />
-          </td>
-
-          <!-- Actions -->
-          <td class="action-buttons">
-            <div class="edit-delete-btns">
+            <!-- Actions -->
+            <td class="action-buttons">
               <button class="btn secondary" @click="editRoom(room)">Edit</button>
               <button class="btn danger" @click="openDeleteModal(room.id)">Delete</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-    <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteModal" class="modal-overlay">
-      <div class="modal-content">
-        <h3>Are you sure you want to delete this room?</h3>
-        <div class="modal-actions">
-          <button class="btn danger" @click="deleteRoom">Yes, Delete</button>
-          <button class="btn primary" @click="closeDeleteModal">Cancel</button>
+      <!-- Delete Confirmation Modal -->
+      <div v-if="showDeleteModal" class="modal-overlay">
+        <div class="modal-content">
+          <h3>Are you sure you want to delete this room?</h3>
+          <div class="modal-actions">
+            <button class="btn danger" @click="deleteRoom">Yes, Delete</button>
+            <button class="btn primary" @click="closeDeleteModal">Cancel</button>
+          </div>
         </div>
       </div>
     </div>
@@ -84,14 +85,9 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { Icon } from '@iconify/vue';  // Import the Icon component
-
 
 export default {
   name: 'Rooms',
-    components: {
-    Icon,  // Register the Icon component
-  },
   data() {
     return {
       showDeleteModal: false,
@@ -126,7 +122,7 @@ export default {
     },
     async toggleFeatured(room) {
       try {
-        room.featured = !room.featured; 
+        room.featured = !room.featured;
         await this.$store.dispatch('backendRooms/toggleFeatured', room.id);
         this.showMessage('Room featured status updated', 'success');
       } catch (error) {
@@ -147,98 +143,62 @@ export default {
 </script>
 
 <style scoped>
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Table */
 .rooms-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  table-layout: auto; /* Ensures columns resize according to their content */
+  table-layout: auto; /* Allows columns to fit content */
 }
 
-.rooms-table th, .rooms-table td {
+.rooms-table th,
+.rooms-table td {
   border: 1px solid #ddd;
-  padding: 15px;
+  padding: 8px !important;
   text-align: left;
-  word-wrap: break-word; /* Prevents long words from breaking the layout */
+  white-space: nowrap; /* Prevents wrapping */
 }
 
 .rooms-table th {
-  background-color: #D0A047;
+  background-color: #d0a047;
   color: white;
+  font-size:12px;
 }
 
 .rooms-table tbody tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-/* Optional: You can set a maximum width for certain columns if you want to control them */
-.rooms-table td:nth-child(7), .rooms-table td:nth-child(8), .rooms-table td:nth-child(9) {
-  max-width: 150px; /* Set a max-width for photo gallery or amenities column */
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap; /* Prevent content from wrapping into multiple lines */
-}
 
-.room-image {
-  max-width: 100px;
-  max-height: 100px;
-  object-fit: cover;
-}
 
 .gallery {
   display: flex;
-  gap: 5px;
-  overflow-x: auto;
-  max-width: 150px;
+  flex-direction: column; /* Stack images vertically */
+  gap: 10px; /* Adds spacing between images */
 }
 
-.gallery-image {
-  width: 50px;
-  height: 50px;
+.room-image {
+  width: 100px; /* Adjust width as needed */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Ensures each image is on a new line */
+    max-width: 50px;
+  max-height: 50px;
   object-fit: cover;
   border-radius: 5px;
 }
 
+/* Amenities */
 .amenities-list {
   list-style: none;
   padding: 0;
-  display: flex !important;
-  flex-wrap: wrap !important;  /* Allow items to wrap to the next line */
-  gap: 10px !important; /* Optional, adds space between items */
-}
-
-.amenities-list li {
-  display: inline-flex !important;  /* Ensures the items are inline but can wrap */
-  align-items: center !important;
-  gap: 5px !important;
-  flex-basis: 100%; /* Makes each item take full width of the container */
-}
-
-
-
-
-.room-image {
-  max-width: 100px;
-  max-height: 100px;
-  object-fit: cover;
-}
-
-.gallery {
-  display: flex;
-  gap: 5px;
-  overflow-x: auto;
-  max-width: 150px;
-}
-
-.gallery-image {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 5px;
-}
-
-.amenities-list {
-  list-style: none;
-  padding: 0;
+  margin: 0;
 }
 
 .amenities-list li {
@@ -247,13 +207,9 @@ export default {
   gap: 5px;
 }
 
-.amenity-icon {
-  width: 20px;
-  height: 20px;
-}
-
+/* Buttons */
 .btn {
-  padding: 12px 20px;
+  padding: 10px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -261,7 +217,7 @@ export default {
 }
 
 .btn.secondary {
-  background-color: #D0A047;
+  background-color: #d0a047;
   color: white;
 }
 
@@ -271,7 +227,7 @@ export default {
 }
 
 .btn.primary {
-  background-color: #D0A047;
+  background-color: #d0a047;
   color: white;
 }
 
@@ -279,11 +235,20 @@ export default {
   opacity: 0.9;
 }
 
+/* Actions */
 .action-buttons {
   display: flex;
-  gap: 10px;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 10px; /* Space between buttons */
 }
 
+.action-buttons .btn {
+  width: 100%; /* Ensure full-width buttons */
+  display: block; /* Forces buttons to appear on a new line */
+}
+
+
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;

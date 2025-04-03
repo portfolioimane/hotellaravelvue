@@ -8,7 +8,7 @@
     <!-- Show rooms if available -->
     <div v-else-if="availableRooms.length > 0" class="room-list">
       <div v-for="room in availableRooms" :key="room.id" class="room-card">
-        <img :src="room.image" :alt="room.name" class="room-image" />
+        <img :src="room.main_photo" :alt="room.name" class="room-image" />
 
         <div class="room-details">
           <h2 class="room-title">{{ room.name }}</h2>

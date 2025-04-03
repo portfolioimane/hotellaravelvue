@@ -14,7 +14,7 @@
               <th>Phone</th>
               <th>Gender</th>
               <th>Date of Birth</th>
-              <th>Insurance</th>
+
               <th>Actions</th>
             </tr>
           </thead>
@@ -26,15 +26,9 @@
               <td>{{ customer.phone || 'N/A' }}</td>
               <td>{{ customer.gender || 'N/A' }}</td>
               <td>{{ customer.date_of_birth || 'N/A' }}</td>
-              <td>
-                <p>{{ customer.is_insured ? 'Yes' : 'No' }}</p>
-                <p>{{ customer.insurance_provider || 'N/A' }}</p>
-                <p>{{ customer.insurance_id || 'N/A' }}</p>
-              </td>
+      
               <td class="action-buttons">
-                <div class="history-btn">
-                  <button class="btn primary" @click="manageHistory(customer)">History</button>
-                </div>
+               
                 <div class="edit-delete-btns">
                   <button class="btn secondary" @click="editCustomer(customer)">Edit</button>
                   <button class="btn danger" @click="openDeleteModal(customer.id)">Delete</button>

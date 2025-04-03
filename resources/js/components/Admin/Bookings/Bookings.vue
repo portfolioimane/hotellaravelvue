@@ -13,24 +13,26 @@
       <table class="bookings-table">
         <thead>
           <tr>
-            <th>Service</th>
-            <th>Date</th>
-            <th>Slot Time</th>
+            <th>Room ID</th>
+            <th>Check-in</th>
+            <th>Check-out</th>
             <th>Customer</th>
             <th>Phone</th>
             <th>Payment</th>
+            <th>Total</th>
             <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="booking in bookings" :key="booking.id">
-            <td>{{ booking.service.name }}</td>
-            <td>{{ booking.date }}</td>
-            <td>{{ booking.start_time }} - {{ booking.end_time }}</td>
+            <td>{{ booking.room_id }}</td>
+            <td>{{ booking.check_in }}</td>
+            <td>{{ booking.check_out }}</td>
             <td>{{ booking.name }}</td>
             <td>{{ booking.phone }}</td>
             <td>{{ booking.payment_method }}</td>
+            <td>{{ booking.total }} MAD</td>
             <td>
               <select v-model="booking.status" @change="updateBookingStatus(booking)" class="status-dropdown">
                 <option value="pending">Pending</option>
@@ -126,14 +128,15 @@ export default {
 
     // Download the bookings as a CSV
     downloadCSV() {
-      const headers = ['Service', 'Date', 'Slot Time', 'Customer', 'Phone', 'Payment', 'Status'];
+      const headers = ['Room ID', 'Check-in', 'Check-out', 'Customer', 'Phone', 'Payment', 'Total', 'Status'];
       const rows = this.bookings.map(booking => [
-        booking.service.name,
-        booking.date,
-        `${booking.start_time} - ${booking.end_time}`,
+        booking.room_id,
+        booking.check_in,
+        booking.check_out,
         booking.name,
         booking.phone,
         booking.payment_method,
+        booking.total + " MAD",
         booking.status,
       ]);
 
@@ -193,6 +196,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 /* Page container */
